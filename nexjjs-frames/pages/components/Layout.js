@@ -1,4 +1,4 @@
-import React ,{useState} from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -17,8 +17,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MailIcon from "@material-ui/icons/Mail";
 import sidebarmenu from "../api/sidebarmenu";
-import { useRouter } from 'next/router'
-
+import { useRouter } from "next/router";
 
 const drawerWidth = 260;
 
@@ -88,8 +87,8 @@ function Layout({ children }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [selectoption, setselectoption] = useState(-1)
-  const router = useRouter()
+  const [selectoption, setselectoption] = useState(-1);
+  const router = useRouter();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -97,11 +96,11 @@ function Layout({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-const ChooseSidebarOptions = (item,index) => {
-   setselectoption(index)
-    router.push(item.path)
-}
-
+  const ChooseSidebarOptions = (item, index) => {
+    setselectoption(index);
+    console.log(item.path,"aaaaaaaaaa");
+    router.push(item.path, item.as);
+  };
 
   return (
     <div className={classes.root}>
@@ -155,9 +154,14 @@ const ChooseSidebarOptions = (item,index) => {
         <List>
           {sidebarmenu &&
             sidebarmenu.map((item, index) => (
-              <ListItem selected={selectoption===index ?true:false} button key={item.id} onClick={()=>ChooseSidebarOptions(item,index)}>
+              <ListItem
+                selected={selectoption === index ? true : false}
+                button
+                key={item.id}
+                onClick={() => ChooseSidebarOptions(item, index)}
+              >
                 <ListItemIcon>
-                 <item.icon /> 
+                  <item.icon />
                 </ListItemIcon>
                 <ListItemText primary={item.listname} />
               </ListItem>

@@ -4,7 +4,7 @@ const { parse } = require("url");
 const next = require("next");
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
+const app = next({});
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
@@ -13,12 +13,18 @@ app.prepare().then(() => {
     // This tells it to parse the query portion of the URL.
     const parsedUrl = parse(req.url, true);
     const { pathname, query } = parsedUrl;
- 
+
     if (pathname === "/a") {
       app.render(req, res, "/a", query);
     } else if (pathname === "/b") {
       app.render(req, res, "/b", query);
-    } else {
+    } else if (pathname === "/users") {
+      app.render(req, res, "/user-management/users", query);
+    } 
+    // else if (pathname === "/dashboard") {
+    //   app.render(req, res, "/dashboard", query);
+    // } 
+    else {
       handle(req, res, parsedUrl);
     }
   }).listen(3000, (err) => {

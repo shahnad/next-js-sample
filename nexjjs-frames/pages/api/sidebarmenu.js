@@ -14,12 +14,14 @@ const sidebarmenu = [
     icon: HomeIcon,
     id: 1,
     path: "/dashboard",
+    as:'/dashboard'
   },
   {
-    listname: "About",
+    listname: "User Management",
     icon: LabelIcon,
     id: 2,
-    path: "/about-page",
+    path: "/user-management/users",
+    as:'/users'
   },
   // {
   //   listname: "Gallery",
