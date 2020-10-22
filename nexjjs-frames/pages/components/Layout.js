@@ -89,16 +89,15 @@ function Layout({ children }) {
   const [open, setOpen] = React.useState(false);
   const [selectoption, setselectoption] = useState(-1);
   const router = useRouter();
-  const handleDrawerOpen = () => {
-    setOpen(true);
+
+  const handleDrawerOpen = (open) => {
+    console.log(open, "ccccccccccccccccccc");
+    setOpen(!open);
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const ChooseSidebarOptions = (item, index) => {
     setselectoption(index);
-    console.log(item.path,"aaaaaaaaaa");
+
     router.push(item.path, item.as);
   };
 
@@ -115,7 +114,7 @@ function Layout({ children }) {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={() => handleDrawerOpen(open)}
             edge="start"
             className={clsx(classes.menuButton, {
               [classes.hide]: open,
@@ -142,7 +141,7 @@ function Layout({ children }) {
         }}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => handleDrawerOpen(open)}>
             {theme.direction === "rtl" ? (
               <ChevronRightIcon />
             ) : (
