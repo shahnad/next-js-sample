@@ -1,65 +1,104 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React from "react";
+import {
+  Grid,
+  Card,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  CssBaseline,
+  Link,
+} from "@material-ui/core";
+import { useRouter } from "next/router";
 
-export default function Home() {
+function Login(props) {
+  const router = useRouter();
+
+  const [values, setValues] = React.useState({
+    email: "",
+    emailError: "",
+    password: "",
+    passwrdError: "",
+  });
+
+  // form submit function
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    router.push("/dashboard");
+  };
+
+  // onChange function
+  const handleChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <div style={{ overflow: "hidden" }}>
+      <CssBaseline />
+      <Grid
+        container
+        style={{ height: "100vh" }}
+        spacing={3}
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item xs={12} sm={12} md={4} lg={4}>
+          <Card style={{ padding: "60px" }}>
+            <Typography
+              variant="h6"
+              style={{ textAlign: "center" }}
+              gutterBottom
+            >
+              Login
+            </Typography>
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              autoComplete="off"
+              className="flex-column"
+            >
+              <Box display="flex" flexDirection="column">
+                <TextField
+                  id="email"
+                  name="email"
+                  error={values.emailError ? true : false}
+                  style={{ margin: 6 }}
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  label={values.emailError ? "Error" : "Email"}
+                  variant="outlined"
+                  helperText={values.emailError && values.emailError}
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  style={{ margin: 6 }}
+                  type="password"
+                  error={values.passwrdError ? true : false}
+                  value={values.password}
+                  onPaste={(e) => e.preventDefault()}
+                  onChange={handleChange}
+                  label={values.passwrdError ? "Error" : "Password"}
+                  helperText={values.passwrdError && values.passwrdError}
+                  variant="outlined"
+                />
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+                <Button
+                  variant="contained"
+                  style={{ margin: 6 }}
+                  type="submit"
+                  color="primary"
+                >
+                  Login
+                </Button>
+              </Box>
+            </form>
+          </Card>
+        </Grid>
+      </Grid>
     </div>
-  )
+  );
 }
+export default React.memo(Login);
