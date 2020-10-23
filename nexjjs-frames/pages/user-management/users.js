@@ -12,6 +12,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { useRouter } from "next/router";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 300,
@@ -21,7 +23,7 @@ const useStyles = makeStyles({
 function UsersList(props) {
   const classes = useStyles();
   const { userdata } = props;
-
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
 
@@ -33,6 +35,16 @@ function UsersList(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleEditItem = (item) => {
+    router.push(
+      {
+        pathname: "/user-management/edit-users",
+        query: { pid: item.id },
+      },
+      `/user/${item.id}`
+    );
+  };
+
   return (
     <Layout {...props}>
       <TableContainer component={Paper}>
@@ -48,7 +60,7 @@ function UsersList(props) {
           </TableHead>
           <TableBody>
             {userdata &&
-              userdata.map((row, i) => (
+              userdata.slice(0,6).map((row, i) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.email}</TableCell>
@@ -68,7 +80,9 @@ function UsersList(props) {
                         open={i === selected && Boolean(anchorEl)}
                         onClose={handleClose}
                       >
-                        <MenuItem onClick={handleClose}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleEditItem(row)}>
+                          Edit
+                        </MenuItem>
                         <MenuItem onClick={handleClose}>Delete</MenuItem>
                       </Menu>
                     </div>
@@ -82,12 +96,9 @@ function UsersList(props) {
   );
 }
 UsersList.getInitialProps = async (ctx) => {
- 
-
   const res = await fetch("https://jsonplaceholder.typicode.com/users");
   const json = await res.json();
   return {
-    
     userdata: json,
   };
 };

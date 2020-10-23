@@ -18,13 +18,7 @@ app.prepare().then(() => {
       app.render(req, res, "/a", query);
     } else if (pathname === "/b") {
       app.render(req, res, "/b", query);
-    } else if (pathname === "/users") {
-      app.render(req, res, "/user-management/users", query);
-    } 
-    // else if (pathname === "/dashboard") {
-    //   app.render(req, res, "/dashboard", query);
-    // } 
-    else {
+    } else {
       handle(req, res, parsedUrl);
     }
   }).listen(3000, (err) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -86,18 +86,21 @@ const useStyles = makeStyles((theme) => ({
 function Layout({ children }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(true);
   const [selectoption, setselectoption] = useState(-1);
   const router = useRouter();
+  const [pagetitle, setpagetitle] = useState("");
+
+  useEffect(() => {
+    setpagetitle(window.location.pathname);
+  }, []);
 
   const handleDrawerOpen = (open) => {
-    console.log(open, "ccccccccccccccccccc");
     setOpen(!open);
   };
 
   const ChooseSidebarOptions = (item, index) => {
     setselectoption(index);
-
     router.push(item.path, item.as);
   };
 
@@ -123,7 +126,7 @@ function Layout({ children }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Mini variant drawer
+            {pagetitle.substr(1).toUpperCase()}
           </Typography>
         </Toolbar>
       </AppBar>
