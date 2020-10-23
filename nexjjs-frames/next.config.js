@@ -2,11 +2,7 @@ const path = require("path");
 
 module.exports = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Note: we provide webpack above so you should not `require` it
-    // Perform customizations to webpack config
     config.plugins.push(new webpack.IgnorePlugin(/\/__tests__\//));
-
-    // Important: return the modified config
     return config;
   },
   async rewrites() {
@@ -23,9 +19,20 @@ module.exports = {
         source: "/user/:slug",
         destination: "/user-management/edit-users",
       },
+      {
+        source: "/posts",
+        destination: "/posts/post-list",
+      },
+      {
+        source: "/post/:slug",
+        destination: "/posts/post-view",
+      },
     ];
   },
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
+  },
+  env: {
+    customKey: "https://jsonplaceholder.typicode.com/",
   },
 };

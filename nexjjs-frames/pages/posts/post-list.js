@@ -20,12 +20,13 @@ const useStyles = makeStyles({
   },
 });
 
-function UsersList(props) {
+function PostList(props) {
   const classes = useStyles();
   const { userdata } = props;
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
+
   const handleClick = (event, i) => {
     setselected(i);
     setAnchorEl(event.currentTarget);
@@ -34,10 +35,10 @@ function UsersList(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleEditItem = (item) => {
     router.push(
-      { pathname: "/user-management/edit-users", query: { pid: item.id } },
-      `/user/${item.id}`
+      { pathname: "/posts/post-view", query: { pid: item.id } },`/post/${item.id}`
     );
   };
 
@@ -47,10 +48,8 @@ function UsersList(props) {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>User Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Company Name</TableCell>
-              <TableCell>Phone</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Body</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -58,13 +57,13 @@ function UsersList(props) {
             {userdata &&
               userdata.slice(0, 6).map((row, i) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.company.name}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
+                  <TableCell>{row.title}</TableCell>
+                  <TableCell>{row.body}</TableCell>
                   <TableCell>
                     <>
-                      <IconButton onClick={(e) => handleClick(e, i)}><MoreVertIcon /></IconButton>
+                      <IconButton onClick={(e) => handleClick(e, i)}>
+                        <MoreVertIcon />
+                      </IconButton>
                       <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -72,7 +71,9 @@ function UsersList(props) {
                         open={i === selected && Boolean(anchorEl)}
                         onClose={handleClose}
                       >
-                        <MenuItem onClick={() => handleEditItem(row)}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleEditItem(row)}>
+                        view
+                        </MenuItem>
                         <MenuItem onClick={handleClose}>Delete</MenuItem>
                       </Menu>
                     </>
@@ -85,11 +86,11 @@ function UsersList(props) {
     </Layout>
   );
 }
-UsersList.getInitialProps = async (ctx) => {
-  const res = await fetch(`${process.env.customKey}users`);
+PostList.getInitialProps = async (ctx) => {
+  const res = await fetch(`${process.env.customKey}posts`);
   const json = await res.json();
   return {
     userdata: json,
   };
 };
-export default UsersList;
+export default PostList;

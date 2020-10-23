@@ -25,11 +25,10 @@ const useStyles = makeStyles({
   },
 });
 
-function Editusers(props) {
+function PostView(props) {
   const classes = useStyles();
-  const { user, id } = props;
-
   const router = useRouter();
+  const { post } = props;
 
   const handleBack = () => {
     router.back();
@@ -43,20 +42,16 @@ function Editusers(props) {
             color="textSecondary"
             gutterBottom
           >
-            {user && user.website}
+            Word of the Day
           </Typography>
           <Typography variant="h5" component="h2">
-            {user && user.name}
+            {post.title}
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
-            {user && user.email}
+            adjective
           </Typography>
           <Typography variant="body2" component="p">
-            {user && user.company && user.company.name}
-            <br />
-            {user && user.company && user.company.bs}
-            <br />
-            {user && user.company && user.company.catchPhrase}
+            {post.body}
           </Typography>
         </CardContent>
         <CardActions>
@@ -66,6 +61,7 @@ function Editusers(props) {
             variant="contained"
             color="primary"
           >
+            {" "}
             Back
           </Button>
         </CardActions>
@@ -73,13 +69,12 @@ function Editusers(props) {
     </Layout>
   );
 }
-Editusers.getInitialProps = async ({ query }) => {
-  const res = await fetch(`${process.env.customKey}users/${query.pid}`);
+PostView.getInitialProps = async ({ query }) => {
+  const res = await fetch(`${process.env.customKey}posts/${query.pid}`);
   const json = await res.json();
   return {
-    user: json,
+    post: json,
     id: query.pid ? query.pid : null,
   };
 };
-
-export default Editusers;
+export default PostView;

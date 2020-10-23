@@ -23,12 +23,13 @@ const sidebarmenu = [
     path: "/user-management/users",
     as:'/users'
   },
-  // {
-  //   listname: "Gallery",
-  //   icon: PhotoLibraryIcon,
-  //   id: 3,
-  //   path: "/gallery-page",
-  // },
+  {
+    listname: "Posts",
+    icon: PhotoLibraryIcon,
+    id: 3,
+    path: "/posts/post-list",
+    as:'/posts'
+  },
   // {
   //   listname: "Settings",
   //   icon: SettingsIcon,
