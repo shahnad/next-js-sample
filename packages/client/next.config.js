@@ -27,6 +27,10 @@ module.exports = {
         source: "/post/:slug",
         destination: "/posts/post-view",
       },
+      {
+        source: "/category",
+        destination: "/category/category-list",
+      },
     ];
   },
   sassOptions: {

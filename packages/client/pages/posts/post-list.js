@@ -38,7 +38,8 @@ function PostList(props) {
 
   const handleEditItem = (item) => {
     router.push(
-      { pathname: "/posts/post-view", query: { pid: item.id } },`/post/${item.id}`
+      { pathname: "/posts/post-view", query: { pid: item.id } },
+      `/post/${item.id}`
     );
   };
 
@@ -55,6 +56,7 @@ function PostList(props) {
           </TableHead>
           <TableBody>
             {userdata &&
+              userdata.length > 0 &&
               userdata.slice(0, 6).map((row, i) => (
                 <TableRow key={row.id}>
                   <TableCell>{row.title}</TableCell>
@@ -72,7 +74,7 @@ function PostList(props) {
                         onClose={handleClose}
                       >
                         <MenuItem onClick={() => handleEditItem(row)}>
-                        view
+                          view
                         </MenuItem>
                         <MenuItem onClick={handleClose}>Delete</MenuItem>
                       </Menu>

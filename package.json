@@ -10,6 +10,10 @@
   },
   "scripts": {
     "client:start": "cd packages/client && yarn dev",
-    "client:build": "cd packages/client && next build"
+    "client:build": "cd packages/client && next build",
+    "api:start":"cd packages/api && yarn start",
+    "web:start": "cd packages/web && yarn start",
+    "web:build": "cd packages/web && next build"
+    
   }
 }

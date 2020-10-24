@@ -8,14 +8,14 @@ let search = "";
 
 // get
 router.get("/category", function (req, res, next) {
-  console.log(req.query, "ss");
+ 
   if (req && req.query) {
     limit = req.query.range[1];
     offset = req.query.range[0];
     param = req.query.sort[0];
     order = req.query.sort[1];
   }
-
+console.log(req,"sss");
   let filter = JSON.parse(req.query && req.query.filter);
 
   if (filter && filter.q) {

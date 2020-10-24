@@ -14,16 +14,22 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useRouter } from "next/router";
 import AlertDialog from "../common/dialogue";
+import TablePaginations from "./Pagination";
+import TablePagination from "@material-ui/core/TablePagination";
 
 const useStyles = makeStyles({
   table: {
     minWidth: 300,
   },
+  titlewidth: {
+    width: "8rem",
+  },
 });
 
-function UsersList(props) {
+function CategoryList(props) {
   const classes = useStyles();
-  const { userdata } = props;
+  const { data, total } = props;
+
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
@@ -31,6 +37,18 @@ function UsersList(props) {
     windowOpen: false,
     PropsPass: false,
   });
+
+  const [page, setPage] = React.useState(1);
+  const [rowsPerPage, setRowsPerPage] = React.useState(4);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleClick = (event, i) => {
     setselected(i);
@@ -71,21 +89,19 @@ function UsersList(props) {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>User Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Company Name</TableCell>
-              <TableCell>Phone</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {userdata &&
-             userdata.length > 0&&  userdata.slice(0, 6).map((row, i) => (
+            {data &&
+              data.map((row, i) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.company.name}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
+                  <TableCell className={classes.titlewidth}>
+                    {row.category}
+                  </TableCell>
+                  <TableCell>{row.description}</TableCell>
                   <TableCell>
                     <>
                       <IconButton onClick={(e) => handleClick(e, i)}>
@@ -112,15 +128,27 @@ function UsersList(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {open.windowOpen && <AlertDialog open={open.PropsPass} />}
+      <TablePagination
+        component="div"
+        count={100}
+        page={page}
+        onChangePage={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
     </Layout>
   );
 }
-UsersList.getInitialProps = async (ctx) => {
-  const res = await fetch(`${process.env.customKey}users`);
+
+export async function getStaticProps({ rowsPerPage }) {
+  const res = await fetch(
+    `http://localhost:3100/category?filter=%7B%7D&range=0&range=4&sort=id&sort=ASC`
+  );
   const json = await res.json();
+
   return {
-    userdata: json,
+    props: json, // will be passed to the page component as props
   };
-};
-export default UsersList;
+}
+
+export default CategoryList;

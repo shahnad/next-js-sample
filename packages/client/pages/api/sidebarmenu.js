@@ -30,12 +30,13 @@ const sidebarmenu = [
     path: "/posts/post-list",
     as:'/posts'
   },
-  // {
-  //   listname: "Settings",
-  //   icon: SettingsIcon,
-  //   id: 4,
-  //   path: "/settings-page",
-  // },
+  {
+    listname: "Category",
+    icon: SettingsIcon,
+    id: 4,
+    path: "/category/category-list",
+    as:'/category'
+  },
   // {
   //   listname: "Contact",
   //   icon: ContactMailIcon,
