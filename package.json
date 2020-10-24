@@ -1,0 +1,15 @@
+{
+  "name": "next-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/shahnad/nextjs-sample.git",
+  "author": "shahnad\" <shahnad@revyrieglobal.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  },
+  "scripts": {
+    "client:start": "cd packages/client && yarn dev",
+    "client:build": "cd packages/client && next build"
+  }
+}

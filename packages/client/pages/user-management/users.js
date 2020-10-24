@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -13,6 +13,7 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useRouter } from "next/router";
+import AlertDialog from "../common/dialogue";
 
 const useStyles = makeStyles({
   table: {
@@ -26,6 +27,11 @@ function UsersList(props) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
+  const [open, setOpen] = React.useState({
+    windowOpen: false,
+    PropsPass: false,
+  });
+
   const handleClick = (event, i) => {
     setselected(i);
     setAnchorEl(event.currentTarget);
@@ -34,13 +40,31 @@ function UsersList(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleEditItem = (item) => {
+  const handleEditItem = (item, i) => {
     router.push(
       { pathname: "/user-management/edit-users", query: { pid: item.id } },
       `/user/${item.id}`
     );
   };
-
+  const handleDelete = (item, i) => {
+    if (i === selected) {
+      let data = {
+        open: true,
+        message: "Are you sure",
+      };
+      setOpen({
+        ...open,
+        windowOpen: true,
+        PropsPass: true,
+      });
+      // setTimeout(() => {
+      //   setOpen({
+      //     ...open,
+      //     windowOpen: false,
+      //   });
+      // }, 1000);
+    }
+  };
   return (
     <Layout {...props}>
       <TableContainer component={Paper}>
@@ -64,7 +88,9 @@ function UsersList(props) {
                   <TableCell>{row.phone}</TableCell>
                   <TableCell>
                     <>
-                      <IconButton onClick={(e) => handleClick(e, i)}><MoreVertIcon /></IconButton>
+                      <IconButton onClick={(e) => handleClick(e, i)}>
+                        <MoreVertIcon />
+                      </IconButton>
                       <Menu
                         id="simple-menu"
                         anchorEl={anchorEl}
@@ -72,8 +98,12 @@ function UsersList(props) {
                         open={i === selected && Boolean(anchorEl)}
                         onClose={handleClose}
                       >
-                        <MenuItem onClick={() => handleEditItem(row)}>Edit</MenuItem>
-                        <MenuItem onClick={handleClose}>Delete</MenuItem>
+                        <MenuItem onClick={() => handleEditItem(row, i)}>
+                          Edit
+                        </MenuItem>
+                        <MenuItem onClick={() => handleDelete(row, i)}>
+                          Delete
+                        </MenuItem>
                       </Menu>
                     </>
                   </TableCell>
@@ -82,6 +112,7 @@ function UsersList(props) {
           </TableBody>
         </Table>
       </TableContainer>
+      {open.windowOpen && <AlertDialog open={open.PropsPass} />}
     </Layout>
   );
 }
