@@ -1,0 +1,24 @@
+.slick-dots {
+    display: flex !important;
+}
+.slick-slider {
+    cursor: pointer !important;
+}
+.slick-dots li {
+    position: relative;
+    display: inline-block;
+    margin: 0 5px;
+    padding: 0;
+    cursor: pointer;
+    width: auto !important;
+    height: auto !important;
+}
+li>a>div{
+    cursor: pointer !important;  
+    border: 1px solid #0000003b;
+}
+.MuiFormControl-root >.MuiInputBase-root>input{
+    text-align: center ;
+    color: #0b5216;
+    font-weight: 700;
+}

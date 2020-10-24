@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/shoutcart/static/css/main.5f361e03.chunk.css",
+    "main.js": "/shoutcart/static/js/main.8a689437.chunk.js",
+    "main.js.map": "/shoutcart/static/js/main.8a689437.chunk.js.map",
+    "runtime-main.js": "/shoutcart/static/js/runtime-main.59545bc8.js",
+    "runtime-main.js.map": "/shoutcart/static/js/runtime-main.59545bc8.js.map",
+    "static/js/2.96e5e7e0.chunk.js": "/shoutcart/static/js/2.96e5e7e0.chunk.js",
+    "static/js/2.96e5e7e0.chunk.js.map": "/shoutcart/static/js/2.96e5e7e0.chunk.js.map",
+    "index.html": "/shoutcart/index.html",
+    "precache-manifest.1d0221ac1726552cc0790dd5918e2b7f.js": "/shoutcart/precache-manifest.1d0221ac1726552cc0790dd5918e2b7f.js",
+    "service-worker.js": "/shoutcart/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/shoutcart/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.96e5e7e0.chunk.js.LICENSE.txt": "/shoutcart/static/js/2.96e5e7e0.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/shoutcart/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.59545bc8.js",
+    "static/js/2.96e5e7e0.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.8a689437.chunk.js"
+  ]
+}
