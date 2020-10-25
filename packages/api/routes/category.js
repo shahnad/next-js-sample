@@ -1,49 +1,32 @@
 var express = require("express");
 var connection = require("./connection/connection");
 var router = express();
-let order = "";
-let param = "";
-let offset = "";
-let search = "";
-
+let total = "";
+let limit = 5;
+let offset = 1;
 // get
-router.get("/category", function (req, res, next) {
- 
-  if (req && req.query) {
-    limit = req.query.range[1];
-    offset = req.query.range[0];
-    param = req.query.sort[0];
-    order = req.query.sort[1];
-  }
-console.log(req,"sss");
-  let filter = JSON.parse(req.query && req.query.filter);
+router.get(`/category`, function (req, res, next) {
+  let sqltotal = `SELECT * from category`;
+  console.log(req.query.search, "req.query");let sql = `SELECT * from category LIMIT ${req.query.limit ? req.query.limit : limit} OFFSET ${req.query.page ? req.query.page : offset}`;
+  let search_sql = `SELECT * FROM category WHERE category LIKE '%${req.query.search}%'`;
 
-  if (filter && filter.q) {
-    search = filter.q;
-  } else {
-    search = "";
-  }
-  let sql2 = `SELECT * from category`;
-  let sql = `SELECT * FROM category WHERE category LIKE '%${search}%' ORDER BY ${param} ${order} LIMIT ${limit} OFFSET ${offset}`;
-
-  connection.query(sql, function (err, rows, fields) {
-    connection.query(sql2, function (error, data, fieldslist) {
-      if (err) throw err;
+  connection.query(sqltotal, function (error, data, fieldslist) {
+    connection.query(req.query.search ? search_sql : sql, function (err,rows,fieldslist) {
+      if (err) res.send({ data: err.sqlMessage });
+      total = data.length;
       res.send({
         data: rows,
-        total: data.length,
+        total: total,
       });
     });
   });
 });
 // post
 router.post("/category", (req, res, cb) => {
-  console.log(req.body, "req");
+  
   let data = req.body;
 
-  let sql = `INSERT INTO category (category, date) VALUES ("${
-    data.category
-  }", "${new Date()}");`;
+  let sql = `INSERT INTO category (category, date) VALUES ("${data.category}", "${new Date()}");`;
   connection.query(sql, function (err, rows, fields) {
     if (err) throw err;
     res.send({
@@ -51,7 +34,7 @@ router.post("/category", (req, res, cb) => {
     });
   });
 });
-// delete
+// // delete
 router.delete("/category/:id", (req, res, cb) => {
   let id = req && req.params.id;
   let body = req && req.body;
@@ -64,7 +47,7 @@ router.delete("/category/:id", (req, res, cb) => {
   });
 });
 
-// get by id
+// // get by id
 router.get("/category/:id", (req, res, cb) => {
   let id = req && req.params.id;
 
@@ -77,7 +60,7 @@ router.get("/category/:id", (req, res, cb) => {
   });
 });
 
-// update
+// // update
 router.put("/category/:id", (req, res, cb) => {
   let id = req && req.params.id;
   let body = req && req.body;
