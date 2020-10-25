@@ -57,7 +57,6 @@ function CategoryList(props) {
     timeout = setTimeout(() => {
       apiHandle(page, rowsPerPage, event.target.value);
     }, 300);
-
   };
 
   const handleChangePage = (event, newPage) => {
