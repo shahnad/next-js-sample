@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -75,7 +75,10 @@ export default function PrimarySearchAppBar(props) {
     handleMobileMenuOpen,
     mobileMenuId,
     menuId,
+    handleSearchFormChange,
+    formvalue
   } = props;
+
 
   return (
     <>
@@ -94,6 +97,8 @@ export default function PrimarySearchAppBar(props) {
             input: classes.inputInput,
           }}
           inputProps={{ "aria-label": "search" }}
+          name="search"
+          onChange={handleSearchFormChange}
         />
       </div>
 

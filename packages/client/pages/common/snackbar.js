@@ -18,8 +18,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CommonSnackbars(props) {
+  const {alert,alertResponce }= props;
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(alert.isopen);
 
   const handleClick = () => {
     setOpen(true);
@@ -30,22 +31,23 @@ export default function CommonSnackbars(props) {
       return;
     }
     setOpen(false);
+    alertResponce(false)
   };
 
   return (
     <div className={classes.root}>
-      <Button variant="outlined" onClick={handleClick}>
+      {/* <Button variant="outlined" onClick={handleClick}>
         Open success snackbar
-      </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          This is a success message!
+      </Button> */}
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alert.type}>
+          {alert.message}
         </Alert>
       </Snackbar>
-      <Alert severity="error">This is an error message!</Alert>
+      {/* <Alert severity="error">This is an error message!</Alert>
       <Alert severity="warning">This is a warning message!</Alert>
       <Alert severity="info">This is an information message!</Alert>
-      <Alert severity="success">This is a success message!</Alert>
+      <Alert severity="success">This is a success message!</Alert> */}
     </div>
   );
 }

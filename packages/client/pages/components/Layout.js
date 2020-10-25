@@ -103,10 +103,15 @@ function Layout({ children }) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
+ 
+
 
   useEffect(() => {
     setpagetitle(window.location.pathname);
   }, []);
+
+
+ 
 
   const handleDrawerOpen = (open) => {
     setOpen(!open);
@@ -214,7 +219,7 @@ function Layout({ children }) {
             <MenuIcon />
           </IconButton>
           <PrimarySearchAppBar
-            menuId={menuId}
+          menuId={menuId}
             handleMobileMenuOpen={handleMobileMenuOpen}
             mobileMenuId={mobileMenuId}
             pagetitle={pagetitle}

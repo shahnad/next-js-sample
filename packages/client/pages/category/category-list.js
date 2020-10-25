@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,8 +14,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { useRouter } from "next/router";
 import AlertDialog from "../common/dialogue";
-import TablePaginations from "./Pagination";
+import CommonSnackbars from "../common/snackbar";
 import TablePagination from "@material-ui/core/TablePagination";
+import api from "../api/api";
+import CommonCreateButton from "../common/create-searchbar";
 
 const useStyles = makeStyles({
   table: {
@@ -25,29 +27,48 @@ const useStyles = makeStyles({
     width: "8rem",
   },
 });
-
+let timeout = 0;
 function CategoryList(props) {
   const classes = useStyles();
   const { data, total } = props;
-
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
-  const [open, setOpen] = React.useState({
-    windowOpen: false,
-    PropsPass: false,
-  });
-
+  const [category, setcategory] = useState(data);
   const [page, setPage] = React.useState(1);
   const [rowsPerPage, setRowsPerPage] = React.useState(4);
+  const [open, setOpen] = React.useState({
+    message: "",
+    isopen: false,
+    id: "",
+  });
+  const [alert, setalert] = useState({
+    isopen: false,
+    message: "",
+    type: "",
+  });
+  const [formvalue, setformvalue] = useState({
+    search: "",
+  });
+
+  const handleSearchFormChange = (event) => {
+    if (timeout) clearTimeout(timeout);
+    setformvalue({ ...formvalue, [event.target.name]: event.target.value });
+    timeout = setTimeout(() => {
+      apiHandle(page, rowsPerPage, event.target.value);
+    }, 300);
+
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    apiHandle(newPage, rowsPerPage, formvalue.search);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    apiHandle(page, event.target.value, formvalue.search);
   };
 
   const handleClick = (event, i) => {
@@ -58,33 +79,74 @@ function CategoryList(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleEditItem = (item, i) => {
     router.push(
       { pathname: "/user-management/edit-users", query: { pid: item.id } },
       `/user/${item.id}`
     );
   };
-  const handleDelete = (item, i) => {
-    if (i === selected) {
-      let data = {
-        open: true,
-        message: "Are you sure",
-      };
-      setOpen({
-        ...open,
-        windowOpen: true,
-        PropsPass: true,
+
+  const deleteResponce = async (res, id) => {
+    if (res === "agreed") {
+      const res = await api.delete(`category/${id}`);
+      if (res.status === 200) {
+        apiHandle(page, rowsPerPage, formvalue.search);
+        setOpen({ ...open, isopen: false, message: ``, id: "" });
+        setalert({
+          ...alert,
+          isopen: true,
+          message: "Deleted Successfully !",
+          type: "success",
+        });
+      } else {
+        setalert({
+          ...alert,
+          isopen: true,
+          message: "Something Error happened. please Try again !",
+          type: "error",
+        });
+      }
+    } else {
+      setOpen({ ...open, isopen: false, message: "", id: "" });
+      setalert({
+        ...alert,
+        isopen: true,
+        message: "Cancelled Successfully !",
+        type: "info",
       });
-      // setTimeout(() => {
-      //   setOpen({
-      //     ...open,
-      //     windowOpen: false,
-      //   });
-      // }, 1000);
     }
   };
+
+  const handleDelete = (item, i) => {
+    if (i === selected) {
+      setOpen({
+        ...open,
+        isopen: true,
+        message: `Are You Sure want to delete ${item.category}`,
+        id: item.id,
+      });
+    }
+  };
+
+  const apiHandle = async (page, setRowsPerPage, search) => {
+    const res = await fetch(
+      `http://localhost:3100/category?search=${search}&page=${page}&limit=${setRowsPerPage}`
+    );
+    const json = await res.json();
+    setcategory([...json.data]);
+  };
+
+  const alertResponce = (cb) => {
+    setalert({ ...alert, isopen: false, type: "", message: "" });
+  };
+
   return (
     <Layout {...props}>
+      <CommonCreateButton
+        formvalue={formvalue}
+        handleSearchFormChange={handleSearchFormChange}
+      />
       <TableContainer component={Paper}>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
@@ -95,8 +157,8 @@ function CategoryList(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data &&
-              data.map((row, i) => (
+            {category &&
+              category.map((row, i) => (
                 <TableRow key={row.id}>
                   <TableCell className={classes.titlewidth}>
                     {row.category}
@@ -130,24 +192,35 @@ function CategoryList(props) {
       </TableContainer>
       <TablePagination
         component="div"
-        count={100}
+        rowsPerPageOptions={[4, 10, 25, 50]}
+        count={total}
         page={page}
         onChangePage={handleChangePage}
         rowsPerPage={rowsPerPage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      {open.isopen && (
+        <AlertDialog
+          isOpen={open.isopen}
+          message={open.message}
+          id={open.id}
+          deleteResponce={deleteResponce}
+        />
+      )}
+
+      {alert.isopen && (
+        <CommonSnackbars alertResponce={alertResponce} alert={alert} />
+      )}
     </Layout>
   );
 }
 
 export async function getStaticProps({ rowsPerPage }) {
-  const res = await fetch(
-    `http://localhost:3100/category?filter=%7B%7D&range=0&range=4&sort=id&sort=ASC`
-  );
+  const res = await fetch(`http://localhost:3100/category`);
   const json = await res.json();
 
   return {
-    props: json, // will be passed to the page component as props
+    props: json,
   };
 }
 

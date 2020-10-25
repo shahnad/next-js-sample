@@ -2,31 +2,42 @@ var express = require("express");
 var connection = require("./connection/connection");
 var router = express();
 let total = "";
-let limit = 5;
+let limit = 4;
 let offset = 1;
 // get
 router.get(`/category`, function (req, res, next) {
   let sqltotal = `SELECT * from category`;
-  console.log(req.query.search, "req.query");let sql = `SELECT * from category LIMIT ${req.query.limit ? req.query.limit : limit} OFFSET ${req.query.page ? req.query.page : offset}`;
-  let search_sql = `SELECT * FROM category WHERE category LIKE '%${req.query.search}%'`;
+  let sql = `SELECT * from category LIMIT ${
+    req.query.limit ? req.query.limit : limit
+  } OFFSET ${req.query.page ? req.query.page : offset}`;
+  let search_sql = `SELECT * FROM category WHERE category LIKE '%${req.query.search}%'  OR description LIKE '%${req.query.search}%'`;
 
   connection.query(sqltotal, function (error, data, fieldslist) {
-    connection.query(req.query.search ? search_sql : sql, function (err,rows,fieldslist) {
-      if (err) res.send({ data: err.sqlMessage });
-      total = data.length;
-      res.send({
-        data: rows,
-        total: total,
-      });
+    connection.query(req.query.search ? search_sql : sql, function (
+      err,
+      rows,
+      fieldslist
+    ) {
+      if (err) {
+        res.send({ data: err.sqlMessage });
+        throw err;
+      } else {
+        total = data.length;
+        res.send({
+          data: rows,
+          total: total,
+        });
+      }
     });
   });
 });
 // post
 router.post("/category", (req, res, cb) => {
-  
   let data = req.body;
 
-  let sql = `INSERT INTO category (category, date) VALUES ("${data.category}", "${new Date()}");`;
+  let sql = `INSERT INTO category (category, date) VALUES ("${
+    data.category
+  }", "${new Date()}");`;
   connection.query(sql, function (err, rows, fields) {
     if (err) throw err;
     res.send({
@@ -53,10 +64,16 @@ router.get("/category/:id", (req, res, cb) => {
 
   let sql = `SELECT * FROM category WHERE id=${id}`;
   connection.query(sql, function (err, rows, fields) {
-    if (err) throw err;
-    res.send({
-      data: rows,
-    });
+    if (err) {
+      res.send({
+        data: err.sqlMessage,
+      });
+      throw err;
+    } else {
+      res.send({
+        data: rows,
+      });
+    }
   });
 });
 
