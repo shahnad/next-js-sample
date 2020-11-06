@@ -24,6 +24,7 @@ import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import PrimarySearchAppBar from "../components/Appbar";
+import store from "store";
 
 const drawerWidth = 260;
 
@@ -90,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Layout({ children }) {
-  
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
@@ -103,15 +103,14 @@ function Layout({ children }) {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
- 
-
+  const [issloggedin, setissloggedin] = useState(store.get("USER"));
 
   useEffect(() => {
+    if (!issloggedin) {
+      router.push("/login");
+    }
     setpagetitle(window.location.pathname);
   }, []);
-
-
- 
 
   const handleDrawerOpen = (open) => {
     setOpen(!open);
@@ -139,6 +138,10 @@ function Layout({ children }) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const logout = () => {
+    store.remove("USER");
+    router.push("/login");
+  };
 
   const renderMenu = (
     <Menu
@@ -152,10 +155,9 @@ function Layout({ children }) {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={logout}>Logout</MenuItem>
     </Menu>
   );
-
- 
 
   const renderMobileMenu = (
     <Menu
@@ -219,7 +221,7 @@ function Layout({ children }) {
             <MenuIcon />
           </IconButton>
           <PrimarySearchAppBar
-          menuId={menuId}
+            menuId={menuId}
             handleMobileMenuOpen={handleMobileMenuOpen}
             mobileMenuId={mobileMenuId}
             pagetitle={pagetitle}

@@ -39,11 +39,16 @@ const useStyles = makeStyles({
       fontWeight: 400,
     },
   },
+  image: {
+    width: 80,
+    height: 80,
+  },
 });
 let timeout = 0;
-function CategoryList(props) {
+function ServiceList(props) {
   const classes = useStyles();
   const { data, total } = props;
+
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selected, setselected] = useState(-1);
@@ -102,14 +107,14 @@ function CategoryList(props) {
 
   const handleEditItem = (item, i) => {
     router.push(
-      { pathname: "/category/edit-category", query: { id: item.id } },
-      `/category/${item.id}`
+      { pathname: "/services/edit-service", query: { id: item.id } },
+      `/service/${item.id}`
     );
   };
 
   const deleteResponce = async (res, id) => {
     if (res === "agreed") {
-      const res = await api.delete(`category/${id}`);
+      const res = await api.delete(`service/${id}`);
       if (res.status === 200) {
         apiHandle(page, rowsPerPage, formvalue.search);
         handleClose();
@@ -117,7 +122,7 @@ function CategoryList(props) {
         setalert({
           ...alert,
           isopen: true,
-          message:res.data.message,
+          message: res.data.message,
           type: "success",
         });
       } else {
@@ -125,7 +130,7 @@ function CategoryList(props) {
         setalert({
           ...alert,
           isopen: true,
-          message: "Something Error happened. please Try again !",
+          message: res.data.message,
           type: "error",
         });
       }
@@ -154,12 +159,11 @@ function CategoryList(props) {
 
   const apiHandle = async (page, setRowsPerPage, search) => {
     const res = await api.get(
-      `category?search=${search}&page=${page}&limit=${setRowsPerPage}`
+      `service?search=${search}&page=${page}&limit=${setRowsPerPage}`
     );
     if (res.data) {
       setcategory(res.data.data);
     }
-    handleClose();
   };
 
   const alertResponce = (cb) => {
@@ -167,8 +171,8 @@ function CategoryList(props) {
   };
 
   let createpath = {
-    path: "/category/create-category",
-    as: "/category/create",
+    path: "/services/create-service",
+    as: "/services/create",
   };
   return (
     <Layout {...props}>
@@ -182,8 +186,9 @@ function CategoryList(props) {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Image</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -193,9 +198,17 @@ function CategoryList(props) {
                 return (
                   <TableRow key={row.id}>
                     <TableCell className={classes.titlewidth}>
-                      {row.category}
+                      {row.title}
                     </TableCell>
-                    <TableCell>{row.description}</TableCell>
+                    <TableCell>₹ {row.price}</TableCell>
+                    <TableCell>
+                      <img
+                        alt={row.image}
+                        className={classes.image}
+                        src={row.image}
+                        // src={process.env.apiUrl+`uploads/`+row.image}
+                      />
+                    </TableCell>
                     <TableCell>
                       <>
                         <IconButton onClick={(e) => handleClick(e, i)}>
@@ -256,10 +269,10 @@ function CategoryList(props) {
 }
 
 export async function getStaticProps() {
-  const res = await api.get(`/category`);
+  const res2 = await api.get(`/service`);
   return {
-    props: res.data,
+    props: res2.data,
   };
 }
 
-export default CategoryList;
+export default ServiceList;

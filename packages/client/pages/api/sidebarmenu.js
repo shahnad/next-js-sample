@@ -37,12 +37,20 @@ const sidebarmenu = [
     path: "/category/category-list",
     as:'/category'
   },
-  // {
-  //   listname: "Contact",
-  //   icon: ContactMailIcon,
-  //   id: 5,
-  //   path: "/contact-page",
-  // },
+  {
+    listname: "Types",
+    icon: ContactMailIcon,
+    id: 5,
+    path: "/types/type-list",
+    as:"/types"
+  },
+  {
+    listname: "Cart items",
+    icon: ContactMailIcon,
+    id: 6,
+    path: "/services/service-list",
+    as:"/services"
+  },
 ];
 
 export default sidebarmenu;

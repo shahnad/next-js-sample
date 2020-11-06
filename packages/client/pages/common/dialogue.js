@@ -26,12 +26,8 @@ export default function AlertDialog(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{`Are You Sure?`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {message} ?
-          </DialogContentText>
-        </DialogContent>
+        <DialogTitle id="alert-dialog-title">{message} ?</DialogTitle>
+  
         <DialogActions>
           <Button onClick={() => handleClose("disagree", id)} color="primary">
             Disagree

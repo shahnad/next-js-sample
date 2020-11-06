@@ -17,12 +17,10 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    // marginRight: theme.spacing(2),
-    // marginLeft: 0,
+  
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
+     width: "auto",
     },
     border: "1px solid #e0e0e0",
     margin: "0 0 10px 0",
@@ -72,7 +70,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CommonCreateButton(props) {
   const classes = useStyles();
-const {handleSearchFormChange,formvalue}=props;
+const {handleSearchFormChange,formvalue,createpath,router}=props;
+
+const handleCreate = () => {
+  router.push(createpath.path,createpath.as)
+}
   return (
     <>
       <Box display="flex" flexDirection="row" flexWrap="wrap">
@@ -108,6 +110,7 @@ const {handleSearchFormChange,formvalue}=props;
               className={classes.createbutton}
               variant="contained"
               color="primary"
+              onClick={handleCreate}
             >
               Create
             </Button>

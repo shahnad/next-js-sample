@@ -86,7 +86,7 @@ export default function PrimarySearchAppBar(props) {
         {pagetitle.substr(1).toUpperCase()}
       </Typography>
 
-      <div className={classes.search}>
+      {/* <div className={classes.search}>
         <div className={classes.searchIcon}>
           <SearchIcon />
         </div>
@@ -100,7 +100,7 @@ export default function PrimarySearchAppBar(props) {
           name="search"
           onChange={handleSearchFormChange}
         />
-      </div>
+      </div> */}
 
       <div className={classes.grow} />
       <div className={classes.sectionDesktop}>

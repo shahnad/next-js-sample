@@ -3,14 +3,14 @@ var connection = require("./connection/connection");
 var router = express();
 let total = "";
 let limit = 4;
-let offset = 1;
+let offset = 0;
 // get
 router.get(`/category`, function (req, res, next) {
-  let sqltotal = `SELECT * from category`;
-  let sql = `SELECT * from category LIMIT ${
+  let sqltotal = `SELECT * from category `;
+  let sql = `SELECT * from category ORDER BY id DESC LIMIT ${
     req.query.limit ? req.query.limit : limit
-  } OFFSET ${req.query.page ? req.query.page : offset}`;
-  let search_sql = `SELECT * FROM category WHERE category LIKE '%${req.query.search}%'  OR description LIKE '%${req.query.search}%'`;
+  } OFFSET ${req.query.page ? req.query.page : offset} `;
+  let search_sql = `SELECT * FROM category WHERE category LIKE '%${req.query.search}%' OR description LIKE '%${req.query.search}%'`;
 
   connection.query(sqltotal, function (error, data, fieldslist) {
     connection.query(req.query.search ? search_sql : sql, function (
@@ -31,30 +31,48 @@ router.get(`/category`, function (req, res, next) {
     });
   });
 });
+
 // post
 router.post("/category", (req, res, cb) => {
   let data = req.body;
 
-  let sql = `INSERT INTO category (category, date) VALUES ("${
+  let sql = `INSERT INTO category (category,description ,date) VALUES ("${
     data.category
-  }", "${new Date()}");`;
+  }","${data.description}", "${new Date()}");`;
+
   connection.query(sql, function (err, rows, fields) {
-    if (err) throw err;
-    res.send({
-      data: rows,
-    });
+    if (err) {
+      res.send({
+        data: [],
+        message: err.sqlMessage,
+      });
+      throw err;
+    } else {
+      res.send({
+        data: rows,
+        message: "Category Added Successfully",
+      });
+    }
   });
 });
+
 // // delete
 router.delete("/category/:id", (req, res, cb) => {
   let id = req && req.params.id;
   let body = req && req.body;
   let sql = `DELETE FROM category WHERE id=${id}`;
   connection.query(sql, function (err, rows, fields) {
-    if (err) throw err;
-    res.send({
-      data: body,
-    });
+    if (err) {
+      res.send({
+        data: err.sqlMessage,
+      });
+      throw err;
+    } else {
+      res.send({
+        data: body,
+        messgae: "Category Deleted Successfully",
+      });
+    }
   });
 });
 
@@ -71,7 +89,7 @@ router.get("/category/:id", (req, res, cb) => {
       throw err;
     } else {
       res.send({
-        data: rows,
+        data: rows[0],
       });
     }
   });
@@ -81,12 +99,21 @@ router.get("/category/:id", (req, res, cb) => {
 router.put("/category/:id", (req, res, cb) => {
   let id = req && req.params.id;
   let body = req && req.body;
-  let sql = `UPDATE category SET category = '${body.category}' WHERE id = ${id};`;
+  let sql = `UPDATE category SET category = '${body.category}'and date=${new Date()} WHERE id = ${id};`;
   connection.query(sql, function (err, rows, fields) {
-    if (err) throw err;
-    res.send({
-      data: body,
-    });
+    if (err) {
+      res.send({
+        data: err.sqlMessage,
+        message: "Something Went Wrong",
+      });
+
+      throw err;
+    } else {
+      res.send({
+        data: body,
+        message: "Category Updated Successfully",
+      });
+    }
   });
 });
 

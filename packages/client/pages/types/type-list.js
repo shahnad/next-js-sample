@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   },
 });
 let timeout = 0;
-function CategoryList(props) {
+function TypeList(props) {
   const classes = useStyles();
   const { data, total } = props;
   const router = useRouter();
@@ -102,22 +102,22 @@ function CategoryList(props) {
 
   const handleEditItem = (item, i) => {
     router.push(
-      { pathname: "/category/edit-category", query: { id: item.id } },
-      `/category/${item.id}`
+      { pathname: "/types/edit-type", query: { id: item.id } },
+      `/type/${item.id}`
     );
   };
 
   const deleteResponce = async (res, id) => {
     if (res === "agreed") {
-      const res = await api.delete(`category/${id}`);
+      const res = await api.delete(`types/${id}`);
       if (res.status === 200) {
         apiHandle(page, rowsPerPage, formvalue.search);
-        handleClose();
         setOpen({ ...open, isopen: false, message: ``, id: "" });
+        handleClose();
         setalert({
           ...alert,
           isopen: true,
-          message:res.data.message,
+          message: res.data.message,
           type: "success",
         });
       } else {
@@ -146,7 +146,7 @@ function CategoryList(props) {
       setOpen({
         ...open,
         isopen: true,
-        message: `Are You Sure want to delete ${item.category}`,
+        message: `Are You Sure want to Delete ${item.name}`,
         id: item.id,
       });
     }
@@ -154,7 +154,7 @@ function CategoryList(props) {
 
   const apiHandle = async (page, setRowsPerPage, search) => {
     const res = await api.get(
-      `category?search=${search}&page=${page}&limit=${setRowsPerPage}`
+      `types?search=${search}&page=${page}&limit=${setRowsPerPage}`
     );
     if (res.data) {
       setcategory(res.data.data);
@@ -167,8 +167,8 @@ function CategoryList(props) {
   };
 
   let createpath = {
-    path: "/category/create-category",
-    as: "/category/create",
+    path: "/types/create-type",
+    as: "/types/create",
   };
   return (
     <Layout {...props}>
@@ -182,8 +182,8 @@ function CategoryList(props) {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Category</TableCell>
-              <TableCell>Description</TableCell>
+            
+              <TableCell>Name</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -192,10 +192,7 @@ function CategoryList(props) {
               category.map((row, i) => {
                 return (
                   <TableRow key={row.id}>
-                    <TableCell className={classes.titlewidth}>
-                      {row.category}
-                    </TableCell>
-                    <TableCell>{row.description}</TableCell>
+                    <TableCell>{row.name}</TableCell>
                     <TableCell>
                       <>
                         <IconButton onClick={(e) => handleClick(e, i)}>
@@ -256,10 +253,10 @@ function CategoryList(props) {
 }
 
 export async function getStaticProps() {
-  const res = await api.get(`/category`);
+  const res = await api.get(`/types`);
   return {
     props: res.data,
   };
 }
 
-export default CategoryList;
+export default TypeList;

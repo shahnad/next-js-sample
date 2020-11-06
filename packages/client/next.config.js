@@ -5,11 +5,21 @@ module.exports = {
     config.plugins.push(new webpack.IgnorePlugin(/\/__tests__\//));
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/auth/login',
+        permanent: true,
+      },
+    ]
+  },
+
   async rewrites() {
     return [
       {
         source: "/login",
-        destination: "/",
+        destination: "/auth/login",
       },
       {
         source: "/users",
@@ -31,6 +41,35 @@ module.exports = {
         source: "/category",
         destination: "/category/category-list",
       },
+      {
+        source: "/category/create",
+        destination: "/category/create-category",
+      },
+      {
+        source: "/types",
+        destination: "/types/type-list",
+      },
+      {
+        source: "/type/:slug",
+        destination: "/types/edit-type",
+      },
+      {
+        source: "/types/create",
+        destination: "/types/create-type",
+      },
+      {
+        source: "/services",
+        destination: "/services/service-list",
+      },
+      {
+        source: "/services/create",
+        destination: "/services/create-service",
+      },
+      {
+        source: "/service/:slug",
+        destination: "/services/edit-service",
+      },
+    
     ];
   },
   sassOptions: {
@@ -38,5 +77,6 @@ module.exports = {
   },
   env: {
     customKey: "https://jsonplaceholder.typicode.com/",
+    apiUrl:"http://localhost:3100/"
   },
 };
